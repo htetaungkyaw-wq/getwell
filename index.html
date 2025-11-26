@@ -1,0 +1,466 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Emotional Spiral Guide</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="min-h-screen bg-gradient-to-br from-indigo-50 via-pink-50 to-emerald-50 text-slate-800">
+  <header class="sticky top-0 z-10 backdrop-blur bg-white/70 shadow-sm border-b border-white/60">
+    <div class="max-w-3xl mx-auto px-4 py-4 flex flex-col gap-2">
+      <div class="flex items-center justify-between">
+        <div>
+          <p id="reminderBanner" class="text-sm text-amber-700 bg-amber-100 border border-amber-200 px-3 py-2 rounded-md hidden">Remember to check in today.</p>
+        </div>
+        <span id="greeting" class="text-sm text-slate-600"></span>
+      </div>
+      <div>
+        <h1 class="text-3xl font-bold text-slate-900">Emotional Spiral Guide</h1>
+        <p class="text-slate-600">Two-week micro-steps toward feeling better.</p>
+      </div>
+      <div class="flex gap-2 mt-2" role="tablist">
+        <button data-tab="today" class="tab-btn px-3 py-2 rounded-md text-sm font-semibold bg-indigo-100 text-indigo-700">Today</button>
+        <button data-tab="plan" class="tab-btn px-3 py-2 rounded-md text-sm font-semibold text-slate-600 hover:bg-slate-100">Plan</button>
+        <button data-tab="history" class="tab-btn px-3 py-2 rounded-md text-sm font-semibold text-slate-600 hover:bg-slate-100">History</button>
+        <button data-tab="settings" class="tab-btn px-3 py-2 rounded-md text-sm font-semibold text-slate-600 hover:bg-slate-100">Settings</button>
+      </div>
+    </div>
+  </header>
+
+  <main class="max-w-3xl mx-auto px-4 py-6 space-y-6">
+    <section id="today" class="tab-section space-y-4">
+      <div class="bg-white/80 backdrop-blur shadow rounded-xl p-5 border border-white/60">
+        <div class="flex items-center justify-between">
+          <div>
+            <p class="text-sm text-slate-500">Day in journey</p>
+            <h2 class="text-xl font-semibold" id="dayLabel">Day 1</h2>
+            <p class="text-sm text-slate-500" id="dateLabel"></p>
+          </div>
+          <span class="inline-flex items-center gap-2 px-3 py-2 rounded-full bg-indigo-50 text-indigo-700 text-sm font-semibold">Today's mood</span>
+        </div>
+      </div>
+
+      <div class="bg-white/80 backdrop-blur shadow rounded-xl p-5 border border-white/60 space-y-4">
+        <div class="flex items-center justify-between">
+          <div>
+            <p class="text-sm text-slate-500">How are you feeling?</p>
+            <h3 class="text-2xl font-bold" id="moodLabel">5 — Boredom / Numb</h3>
+          </div>
+          <div class="text-right text-sm text-slate-600" id="moodSupport">You matter. Today, gentle effort is enough.</div>
+        </div>
+        <input id="moodSlider" type="range" min="1" max="10" value="5" class="w-full accent-indigo-600">
+      </div>
+
+      <div class="bg-white/80 backdrop-blur shadow rounded-xl p-5 border border-white/60 space-y-3" id="tasksCard">
+        <div class="flex items-center justify-between">
+          <div>
+            <p class="text-sm text-slate-500">Today's focus</p>
+            <h3 class="text-xl font-semibold" id="taskTitle">Baseline & Goal Setting</h3>
+          </div>
+          <span class="text-xs px-2 py-1 rounded-full bg-emerald-50 text-emerald-700 border border-emerald-100" id="taskCount"></span>
+        </div>
+        <div class="space-y-2" id="taskList"></div>
+        <div class="mt-3 p-3 rounded-lg bg-slate-50 text-slate-700 text-sm" id="taskSummary">0 of 0 done.</div>
+      </div>
+    </section>
+
+    <section id="plan" class="tab-section hidden space-y-3">
+      <div class="bg-white/80 backdrop-blur shadow rounded-xl p-5 border border-white/60">
+        <h3 class="text-lg font-semibold mb-3">14-day Plan</h3>
+        <div id="planList" class="space-y-3"></div>
+      </div>
+    </section>
+
+    <section id="history" class="tab-section hidden space-y-3">
+      <div class="bg-white/80 backdrop-blur shadow rounded-xl p-5 border border-white/60">
+        <h3 class="text-lg font-semibold mb-3">Mood & Task History</h3>
+        <div id="historyList" class="space-y-2"></div>
+        <div class="mt-4">
+          <p class="text-sm text-slate-600 mb-2">Mood trend (higher is brighter)</p>
+          <div id="trend" class="flex items-end gap-1 h-20 bg-slate-100 rounded-lg p-2"></div>
+        </div>
+      </div>
+    </section>
+
+    <section id="settings" class="tab-section hidden space-y-3">
+      <div class="bg-white/80 backdrop-blur shadow rounded-xl p-5 border border-white/60 space-y-4">
+        <h3 class="text-lg font-semibold">Settings</h3>
+        <div class="space-y-2">
+          <label class="block text-sm font-medium text-slate-700">Nickname</label>
+          <input id="nicknameInput" type="text" class="w-full border border-slate-200 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-indigo-300" placeholder="Friend">
+        </div>
+        <label class="flex items-center gap-2 text-sm text-slate-700">
+          <input id="reminderToggle" type="checkbox" class="accent-indigo-600">
+          Show gentle reminder on load
+        </label>
+        <button id="restartBtn" class="px-4 py-2 rounded-md bg-rose-100 text-rose-700 border border-rose-200 hover:bg-rose-200">Restart 14-day journey</button>
+      </div>
+    </section>
+  </main>
+
+  <script>
+    // Emotional spiral labels and supportive messages
+    const moodLabels = {
+      1: 'No will to live / empty',
+      2: 'Shame / Worthless',
+      3: 'Grief / Helpless',
+      4: 'Fear / Worry',
+      5: 'Boredom / Numb',
+      6: 'Hopeful',
+      7: 'Curious / Positive',
+      8: 'Grateful / Joyful',
+      9: 'Empathy / Compassion',
+      10: 'Unconditional Love / Deep Peace'
+    };
+
+    const moodSupportive = {
+      1: "You're not alone. Small steps are enough today.",
+      2: 'You are worthy of care. Take one tiny action.',
+      3: 'Gentle breaths. Allow yourself to feel and rest.',
+      4: 'Notice what feels safe. You deserve peace.',
+      5: 'You matter. Today, gentle effort is enough.',
+      6: 'Hope is growing. Nurture it with one small act.',
+      7: 'Lovely curiosity. Keep exploring what supports you.',
+      8: 'Beautiful. Notice what supports this feeling.',
+      9: 'Your empathy is a strength. Share it gently.',
+      10: 'Stay with this peace. You radiate calm.'
+    };
+
+    // 14-day plan content
+    const plan = [
+      { dayNumber: 1, title: 'Baseline & Goal Setting', tasks: ['Set current mood', 'Set 1–2 goals', '10-minute journal'] },
+      { dayNumber: 2, title: 'Gratitude & Mindfulness', tasks: ['Write 3 things you are grateful for', '5-minute breathing'] },
+      { dayNumber: 3, title: 'Physical Self-Care', tasks: ['20-minute walk or stretch', 'Note before/after mood'] },
+      { dayNumber: 4, title: 'Learning & Positivity', tasks: ['Watch/read something inspiring', 'Write 3 positive self-statements'] },
+      { dayNumber: 5, title: 'Creativity & Kindness', tasks: ['Small creative activity', 'One small act of kindness'] },
+      { dayNumber: 6, title: 'Reflection & Adjustment', tasks: ['Review last 5 days', 'Adjust goals', 'Plan a small reward'] },
+      { dayNumber: 7, title: 'Social Connection', tasks: ['Meaningful chat', 'Practice listening'] },
+      { dayNumber: 8, title: 'Planning & Calm', tasks: ['Set micro-goals for week 2', '10-minute calm/meditation'] },
+      { dayNumber: 9, title: 'Skill & Growth', tasks: ['Learn something 20–30 minutes', 'Write one takeaway'] },
+      { dayNumber: 10, title: 'Express Yourself', tasks: ['Create or write something about how you feel'] },
+      { dayNumber: 11, title: 'Emotional Awareness', tasks: ['Notice one recurring negative thought', 'Gently reframe it'] },
+      { dayNumber: 12, title: 'Giving & Community', tasks: ['One helpful action for someone or community'] },
+      { dayNumber: 13, title: 'Review Progress', tasks: ['Compare mood now vs Day 1', 'List 3 things that helped most'] },
+      { dayNumber: 14, title: 'Celebrate & Next Steps', tasks: ['Celebrate finishing', 'Write how you want to continue'] }
+    ];
+
+    // State helpers
+    const defaultState = () => ({
+      user: { nickname: 'Friend', startDate: new Date().toISOString().slice(0, 10), showReminder: true },
+      moods: [],
+      tasks: []
+    });
+
+    // Load state from individual keys, falling back to defaults if absent
+    function loadState() {
+      const base = defaultState();
+      let user = base.user;
+      let moods = base.moods;
+      let tasks = base.tasks;
+
+      try {
+        const storedUser = JSON.parse(localStorage.getItem('es_user'));
+        if (storedUser) user = { ...user, ...storedUser };
+      } catch (e) {
+        console.warn('Resetting user data due to parse issue.', e);
+      }
+
+      try {
+        const storedMoods = JSON.parse(localStorage.getItem('es_moods'));
+        if (Array.isArray(storedMoods)) moods = storedMoods;
+      } catch (e) {
+        console.warn('Resetting mood data due to parse issue.', e);
+      }
+
+      try {
+        const storedTasks = JSON.parse(localStorage.getItem('es_tasks'));
+        if (Array.isArray(storedTasks)) tasks = storedTasks;
+      } catch (e) {
+        console.warn('Resetting task data due to parse issue.', e);
+      }
+
+      return { user, moods, tasks };
+    }
+
+    // Persist state to their dedicated keys
+    function saveState(state) {
+      localStorage.setItem('es_user', JSON.stringify(state.user));
+      localStorage.setItem('es_moods', JSON.stringify(state.moods));
+      localStorage.setItem('es_tasks', JSON.stringify(state.tasks));
+    }
+
+    // Date helpers
+    function todayISO() {
+      return new Date().toISOString().slice(0, 10);
+    }
+
+    function dayNumberFromStart(startDate) {
+      const start = new Date(startDate + 'T00:00:00');
+      const today = new Date();
+      const diff = Math.floor((today - start) / (1000 * 60 * 60 * 24));
+      return Math.min(14, Math.max(1, diff + 1));
+    }
+
+    // UI references
+    const tabButtons = document.querySelectorAll('.tab-btn');
+    const tabSections = document.querySelectorAll('.tab-section');
+    const moodSlider = document.getElementById('moodSlider');
+    const moodLabelEl = document.getElementById('moodLabel');
+    const moodSupportEl = document.getElementById('moodSupport');
+    const dayLabelEl = document.getElementById('dayLabel');
+    const dateLabelEl = document.getElementById('dateLabel');
+    const taskTitleEl = document.getElementById('taskTitle');
+    const taskListEl = document.getElementById('taskList');
+    const taskCountEl = document.getElementById('taskCount');
+    const taskSummaryEl = document.getElementById('taskSummary');
+    const planListEl = document.getElementById('planList');
+    const historyListEl = document.getElementById('historyList');
+    const trendEl = document.getElementById('trend');
+    const nicknameInput = document.getElementById('nicknameInput');
+    const reminderToggle = document.getElementById('reminderToggle');
+    const greetingEl = document.getElementById('greeting');
+    const reminderBanner = document.getElementById('reminderBanner');
+    const restartBtn = document.getElementById('restartBtn');
+
+    let state = loadState();
+
+    // Initialization logic
+    function init() {
+      // Ensure a start date exists
+      if (!state.user.startDate) {
+        state.user.startDate = todayISO();
+        saveState(state);
+      }
+
+      // Set reminder banner
+      reminderBanner.classList.toggle('hidden', !state.user.showReminder);
+
+      // Greeting
+      greetingEl.textContent = `Hi, ${state.user.nickname}`;
+
+      // Settings inputs
+      nicknameInput.value = state.user.nickname;
+      reminderToggle.checked = !!state.user.showReminder;
+
+      renderToday();
+      renderPlan();
+      renderHistory();
+    }
+
+    // Tab switching
+    tabButtons.forEach(btn => {
+      btn.addEventListener('click', () => {
+        const target = btn.dataset.tab;
+        tabButtons.forEach(b => b.classList.remove('bg-indigo-100', 'text-indigo-700'));
+        tabButtons.forEach(b => b.classList.add('text-slate-600'));
+        btn.classList.add('bg-indigo-100', 'text-indigo-700');
+        tabSections.forEach(sec => {
+          sec.classList.toggle('hidden', sec.id !== target);
+        });
+        if (target === 'history') renderHistory();
+      });
+    });
+
+    // Render Today tab content
+    function renderToday() {
+      const currentDay = dayNumberFromStart(state.user.startDate);
+      const todayDate = todayISO();
+      dayLabelEl.textContent = `Day ${currentDay} of 14`;
+      dateLabelEl.textContent = new Date().toLocaleDateString();
+
+      // Mood setup: find existing or default to 5
+      const moodEntry = state.moods.find(m => m.date === todayDate) || { date: todayDate, dayNumber: currentDay, moodLevel: 5 };
+      moodSlider.value = moodEntry.moodLevel;
+      updateMoodDisplay(moodEntry.moodLevel);
+
+      // Ensure mood saved when slider moves
+      moodSlider.oninput = (e) => {
+        const level = Number(e.target.value);
+        updateMood(level, currentDay);
+      };
+
+      // Render tasks
+      const dayPlan = plan.find(p => p.dayNumber === currentDay) || plan[plan.length - 1];
+      taskTitleEl.textContent = dayPlan.title;
+      const tasksForToday = state.tasks.find(t => t.date === todayDate) || { date: todayDate, dayNumber: currentDay, completedTaskIndexes: [] };
+      taskListEl.innerHTML = '';
+
+      dayPlan.tasks.forEach((task, index) => {
+        const id = `task-${index}`;
+        const wrapper = document.createElement('label');
+        wrapper.className = 'flex items-center gap-3 p-3 rounded-lg border border-slate-100 hover:border-indigo-100 bg-white';
+        const checkbox = document.createElement('input');
+        checkbox.type = 'checkbox';
+        checkbox.className = 'accent-indigo-600';
+        checkbox.id = id;
+        checkbox.checked = tasksForToday.completedTaskIndexes.includes(index);
+        checkbox.addEventListener('change', () => toggleTask(todayDate, currentDay, index, checkbox.checked));
+        const text = document.createElement('span');
+        text.textContent = task;
+        text.className = 'text-sm text-slate-800';
+        wrapper.appendChild(checkbox);
+        wrapper.appendChild(text);
+        taskListEl.appendChild(wrapper);
+      });
+
+      updateTaskSummary(tasksForToday.completedTaskIndexes.length, dayPlan.tasks.length);
+      taskCountEl.textContent = `${dayPlan.tasks.length} tasks`;
+    }
+
+    // Mood update handler
+    function updateMood(level, dayNumber) {
+      const date = todayISO();
+      const existing = state.moods.find(m => m.date === date);
+      if (existing) {
+        existing.moodLevel = level;
+        existing.dayNumber = dayNumber;
+      } else {
+        state.moods.push({ date, dayNumber, moodLevel: level });
+      }
+      saveState(state);
+      updateMoodDisplay(level);
+      renderHistory();
+    }
+
+    function updateMoodDisplay(level) {
+      moodLabelEl.textContent = `${level} — ${moodLabels[level]}`;
+      moodSupportEl.textContent = moodSupportive[level];
+    }
+
+    // Task completion handler
+    function toggleTask(date, dayNumber, index, isChecked) {
+      let entry = state.tasks.find(t => t.date === date);
+      if (!entry) {
+        entry = { date, dayNumber, completedTaskIndexes: [] };
+        state.tasks.push(entry);
+      }
+      if (isChecked) {
+        if (!entry.completedTaskIndexes.includes(index)) entry.completedTaskIndexes.push(index);
+      } else {
+        entry.completedTaskIndexes = entry.completedTaskIndexes.filter(i => i !== index);
+      }
+      saveState(state);
+      const dayPlan = plan.find(p => p.dayNumber === dayNumber) || plan[plan.length - 1];
+      updateTaskSummary(entry.completedTaskIndexes.length, dayPlan.tasks.length);
+      renderPlan();
+      renderHistory();
+    }
+
+    function updateTaskSummary(done, total) {
+      taskSummaryEl.textContent = `${done} of ${total} completed.`;
+      let encouragement = 'Starting is courageous.';
+      if (done === 0) encouragement = 'Tiny steps count. Try one task.';
+      else if (done < total) encouragement = 'Nice progress. Keep going at your pace.';
+      else encouragement = 'Amazing! Celebrate this effort.';
+      taskSummaryEl.textContent += ` ${encouragement}`;
+    }
+
+    // Render Plan tab
+    function renderPlan() {
+      const currentDay = dayNumberFromStart(state.user.startDate);
+      planListEl.innerHTML = '';
+      plan.forEach(day => {
+        const dayTasks = state.tasks.find(t => t.dayNumber === day.dayNumber);
+        const complete = dayTasks && dayTasks.completedTaskIndexes.length >= day.tasks.length;
+        const card = document.createElement('div');
+        card.className = 'border border-slate-100 rounded-lg p-3 bg-white';
+        if (day.dayNumber === currentDay) card.classList.add('ring-2', 'ring-indigo-200');
+        const header = document.createElement('div');
+        header.className = 'flex items-center justify-between mb-2';
+        const title = document.createElement('div');
+        title.innerHTML = `<p class="text-xs uppercase tracking-wide text-slate-500">Day ${day.dayNumber}</p><h4 class="text-md font-semibold">${day.title}</h4>`;
+        const badge = document.createElement('span');
+        badge.className = 'text-xs px-2 py-1 rounded-full border';
+        if (day.dayNumber < currentDay) {
+          badge.textContent = complete ? 'Done' : 'Earlier';
+          if (complete) badge.classList.add('bg-emerald-50', 'text-emerald-700', 'border-emerald-200');
+          else badge.classList.add('bg-slate-100', 'text-slate-700', 'border-slate-200');
+        } else if (day.dayNumber === currentDay) {
+          badge.textContent = 'Today';
+          badge.classList.add('bg-indigo-50', 'text-indigo-700', 'border-indigo-200');
+        } else {
+          badge.textContent = 'Upcoming';
+          badge.classList.add('bg-slate-50', 'text-slate-600', 'border-slate-200');
+        }
+        header.appendChild(title);
+        header.appendChild(badge);
+        card.appendChild(header);
+
+        const taskList = document.createElement('ul');
+        taskList.className = 'list-disc list-inside text-sm text-slate-700 space-y-1';
+        day.tasks.forEach(t => {
+          const li = document.createElement('li');
+          li.textContent = t;
+          taskList.appendChild(li);
+        });
+        card.appendChild(taskList);
+        planListEl.appendChild(card);
+      });
+    }
+
+    // Render History tab
+    function renderHistory() {
+      const combined = state.moods.map(m => {
+        const tasksForDay = state.tasks.find(t => t.date === m.date);
+        const planForDay = plan.find(p => p.dayNumber === m.dayNumber) || plan[plan.length - 1];
+        const totalTasks = planForDay.tasks.length;
+        const done = tasksForDay ? tasksForDay.completedTaskIndexes.length : 0;
+        return { ...m, done, totalTasks };
+      }).sort((a, b) => b.date.localeCompare(a.date));
+
+      historyListEl.innerHTML = '';
+      if (combined.length === 0) {
+        historyListEl.innerHTML = '<p class="text-sm text-slate-600">No history yet. Check in today to start tracking.</p>';
+      }
+
+      combined.forEach(entry => {
+        const row = document.createElement('div');
+        row.className = 'flex items-center justify-between px-3 py-2 rounded-lg bg-white border border-slate-100';
+        const left = document.createElement('div');
+        left.innerHTML = `<p class="text-sm font-semibold">${new Date(entry.date).toLocaleDateString()}</p><p class="text-xs text-slate-600">Mood: ${entry.moodLevel} — ${moodLabels[entry.moodLevel]}</p>`;
+        const right = document.createElement('div');
+        right.className = 'text-xs text-slate-700';
+        right.textContent = `${entry.done}/${entry.totalTasks} tasks`;
+        row.appendChild(left);
+        row.appendChild(right);
+        historyListEl.appendChild(row);
+      });
+
+      // Trend bars
+      trendEl.innerHTML = '';
+      combined.slice().reverse().forEach(entry => {
+        const bar = document.createElement('div');
+        bar.style.height = `${(entry.moodLevel / 10) * 100}%`;
+        bar.className = 'flex-1 bg-gradient-to-t from-indigo-300 to-emerald-200 rounded-sm';
+        bar.title = `${entry.date}: ${entry.moodLevel}`;
+        trendEl.appendChild(bar);
+      });
+    }
+
+    // Settings handlers
+    nicknameInput.addEventListener('input', (e) => {
+      state.user.nickname = e.target.value || 'Friend';
+      greetingEl.textContent = `Hi, ${state.user.nickname}`;
+      saveState(state);
+    });
+
+    reminderToggle.addEventListener('change', (e) => {
+      state.user.showReminder = e.target.checked;
+      reminderBanner.classList.toggle('hidden', !state.user.showReminder);
+      saveState(state);
+    });
+
+    restartBtn.addEventListener('click', () => {
+      if (confirm('Restart your 14-day journey? This clears your progress.')) {
+        state = defaultState();
+        saveState(state);
+        init();
+      }
+    });
+
+    // Initialize app on load
+    init();
+  </script>
+</body>
+</html>
